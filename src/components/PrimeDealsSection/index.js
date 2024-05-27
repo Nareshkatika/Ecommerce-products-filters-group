@@ -88,7 +88,7 @@ const PrimeDealsSection = () => {
     }
   }
 
-  return <div>{renderPrimeDeals()}</div>
+  return <div className="arrangeEl">{renderPrimeDeals()}</div>
 }
 
 export default PrimeDealsSection

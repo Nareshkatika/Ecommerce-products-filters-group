@@ -92,6 +92,7 @@ const FiltersGroup = props => {
           onChange={onChangeSearchInput}
           onKeyDown={onEnterSearchInput}
         />
+
         <BsSearch className="search-icon" />
       </div>
     )

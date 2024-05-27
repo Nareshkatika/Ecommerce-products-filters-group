@@ -1,9 +1,11 @@
 import {useState, useEffect} from 'react'
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
+
 import FiltersGroup from '../FiltersGroup'
 import ProductCard from '../ProductCard'
 import ProductsHeader from '../ProductsHeader'
+
 import './index.css'
 
 const categoryOptions = [
@@ -59,34 +61,35 @@ const AllProductsSection = () => {
   const [searchInput, setSearchInput] = useState('')
   const [activeRatingId, setActiveRatingId] = useState('')
 
-  useEffect(() => {
-    const getProducts = async () => {
-      setApiStatus(apiStatusConstants.inProgress)
-      const jwtToken = Cookies.get('jwt_token')
-      const apiUrl = `https://apis.ccbp.in/products?sort_by=${activeOptionId}&category=${activeCategoryId}&title_search=${searchInput}&rating=${activeRatingId}`
-      const options = {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-        method: 'GET',
-      }
-      const response = await fetch(apiUrl, options)
-      if (response.ok) {
-        const fetchedData = await response.json()
-        const updatedData = fetchedData.products.map(product => ({
-          title: product.title,
-          brand: product.brand,
-          price: product.price,
-          id: product.id,
-          imageUrl: product.image_url,
-          rating: product.rating,
-        }))
-        setProductsList(updatedData)
-        setApiStatus(apiStatusConstants.success)
-      } else {
-        setApiStatus(apiStatusConstants.failure)
-      }
+  const getProducts = async () => {
+    setApiStatus(apiStatusConstants.inProgress)
+    const jwtToken = Cookies.get('jwt_token')
+    const apiUrl = `https://apis.ccbp.in/products?sort_by=${activeOptionId}&category=${activeCategoryId}&title_search=${searchInput}&rating=${activeRatingId}`
+    const options = {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      method: 'GET',
     }
+    const response = await fetch(apiUrl, options)
+    if (response.ok) {
+      const fetchedData = await response.json()
+      const updatedData = fetchedData.products.map(product => ({
+        title: product.title,
+        brand: product.brand,
+        price: product.price,
+        id: product.id,
+        imageUrl: product.image_url,
+        rating: product.rating,
+      }))
+      setProductsList(updatedData)
+      setApiStatus(apiStatusConstants.success)
+    } else {
+      setApiStatus(apiStatusConstants.failure)
+    }
+  }
+
+  useEffect(() => {
     getProducts()
   }, [activeOptionId, activeCategoryId, searchInput, activeRatingId])
 
@@ -112,20 +115,36 @@ const AllProductsSection = () => {
     </div>
   )
 
-  const renderProductsListView = () => (
-    <div className="all-products-container">
-      <ProductsHeader
-        activeOptionId={activeOptionId}
-        sortbyOptions={sortbyOptions}
-        changeSortby={setActiveOptionId}
-      />
-      <ul className="products-list">
-        {productsList.map(product => (
-          <ProductCard productData={product} key={product.id} />
-        ))}
-      </ul>
-    </div>
-  )
+  const renderProductsListView = () => {
+    const shouldShowProductsList = productsList.length > 0
+
+    return shouldShowProductsList ? (
+      <div className="all-products-container">
+        <ProductsHeader
+          activeOptionId={activeOptionId}
+          sortbyOptions={sortbyOptions}
+          changeSortby={setActiveOptionId}
+        />
+        <ul className="products-list">
+          {productsList.map(product => (
+            <ProductCard productData={product} key={product.id} />
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <div className="no-products-view">
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-no-products-view.png"
+          className="no-products-img"
+          alt="no products"
+        />
+        <h1 className="no-products-heading">No Products Found</h1>
+        <p className="no-products-description">
+          We could not find any products. Try other filters.
+        </p>
+      </div>
+    )
+  }
 
   const renderAllProducts = () => {
     switch (apiStatus) {
@@ -153,6 +172,7 @@ const AllProductsSection = () => {
         categoryOptions={categoryOptions}
         ratingsList={ratingsList}
         changeSearchInput={setSearchInput}
+        enterSearchInput={getProducts}
         activeCategoryId={activeCategoryId}
         activeRatingId={activeRatingId}
         changeCategory={setActiveCategoryId}
