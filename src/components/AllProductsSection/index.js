@@ -9,6 +9,7 @@ import ProductsHeader from '../ProductsHeader'
 import './index.css'
 
 const categoryOptions = [
+  // categoryOptions Passed as props
   {name: 'Clothing', categoryId: '1'},
   {name: 'Electronics', categoryId: '2'},
   {name: 'Appliances', categoryId: '3'},
@@ -22,6 +23,7 @@ const sortbyOptions = [
 ]
 
 const ratingsList = [
+  // ratingsList passed as props
   {
     ratingId: '4',
     imageUrl:
@@ -168,16 +170,16 @@ const AllProductsSection = () => {
   return (
     <div className="all-products-section">
       <FiltersGroup
-        searchInput={searchInput}
+        searchInput={searchInput} // search Input passed as props
         categoryOptions={categoryOptions}
-        ratingsList={ratingsList}
+        ratingsList={ratingsList} // ratings list passed as props
         changeSearchInput={setSearchInput}
-        enterSearchInput={getProducts}
-        activeCategoryId={activeCategoryId}
-        activeRatingId={activeRatingId}
+        enterSearchInput={getProducts} // enterSearchInput passed as props
+        activeCategoryId={activeCategoryId} //
+        activeRatingId={activeRatingId} //
         changeCategory={setActiveCategoryId}
         changeRating={setActiveRatingId}
-        clearFilters={clearFilters}
+        clearFilters={clearFilters} //
       />
       {renderAllProducts()}
     </div>
