@@ -93,7 +93,7 @@ const AllProductsSection = () => {
 
   useEffect(() => {
     getProducts()
-  }, [activeOptionId, activeCategoryId, searchInput, activeRatingId])
+  }, [activeOptionId, activeCategoryId, activeRatingId])
 
   const renderLoadingView = () => (
     <div className="products-loader-container">
